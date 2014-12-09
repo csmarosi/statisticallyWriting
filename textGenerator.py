@@ -60,22 +60,24 @@ def createWordlist(fileName):
 def writeList(fileName, finalList):
     out = codecs.open(fileName, 'w', 'utf-8')
     for w in finalList:
+        if u'ABSTRACT_BEGIN ' == w:
+            out.write('\n\n')
         out.write(w)
     out.write('\n')
 
 
 def main():
-    wo = createWordlist('text/edesAnna')
+    wo = createWordlist('text/csPaper.txt')
     w = []
-    character = True
+    character = False
     if character:
         for wi in wo:
             for wj in wi:
                 w.append(wj)
     else:
         w = wo
-    o = StatisticsTextGenerator(penalty=10, gramN=4, wordNum=1940)
-    writeList('edesAnna.genText', o.generateText(w))
+    o = StatisticsTextGenerator(penalty=10, gramN=4, wordNum=3340)
+    writeList('csPaper.genText', o.generateText(w))
 
 
 if __name__ == "__main__":
