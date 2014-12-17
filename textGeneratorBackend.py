@@ -10,7 +10,7 @@ class StatisticsTextGenerator(object):
         self.nGrams = defaultdict(lambda: defaultdict(int))
 
     def createNgram(self):
-        for i in range(len(self.wordList)-self.gramN):
+        for i in range(len(self.wordList)-self.gramN+1):
             first = tuple(self.wordList[i:i+self.gramN-1])
             follow = self.wordList[i+self.gramN-1]
             self.nGrams[first][follow] += 1
@@ -28,6 +28,9 @@ class StatisticsTextGenerator(object):
 
     def generateText(self, wordList):
         self.wordList = wordList
+        wordListLen = len(wordList)
+        if wordListLen < self.gramN:
+            return []
         self.createNgram()
         nGramDict, maxKeys = self.createDict()
         result = []
@@ -35,9 +38,12 @@ class StatisticsTextGenerator(object):
         while not t[0][1][0].isupper():
             heappop(t)
         result = list(t[0][1])
-        for _ in range(self.wordNum):
+        for i in range(self.wordNum-self.gramN+1):
             p = tuple(result[-self.gramN+1:])
-            popped = heappop(nGramDict[p])
+            try:
+                popped = heappop(nGramDict[p])
+                heappush(nGramDict[p], (popped[0] + self.penalty, popped[1]))
+            except IndexError:
+                popped = None, wordList[i % wordListLen]
             result.append(popped[1])
-            heappush(nGramDict[p], (popped[0] + self.penalty, popped[1]))
         return result

@@ -32,7 +32,8 @@ def main():
                 w.append(wj)
     else:
         w = wo
-    o = textGeneratorBackend.StatisticsTextGenerator(penalty=10, gramN=4, wordNum=1940)
+    o = textGeneratorBackend.StatisticsTextGenerator(
+        penalty=10, gramN=4, wordNum=1940)
     writeList('edesAnna.genText', o.generateText(w))
 
 
